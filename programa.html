@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programa · VI Congreso Internacional</title>
+
+    <!-- Tipografía Archivo -->
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            border-radius: 0;
+        }
+
+        :root {
+            /* Paleta tecnológica */
+            --color-primary: #ede48e;      /* Cian brillante */
+            --color-accent:  #6b6956;      /* Texto principal */
+            --color-secondary: #36352c;    /* Texto secundario */
+
+            --bg-page:  #f2f3f4;           /* Fondo general */
+            --bg-card:  #fff;           /* Paneles */
+            --bg-soft:  #fff;           /* Panel ligeramente más claro */
+
+            --border-color: #e4e4e4;       /* Bordes blancos */
+        }
+
+        body {
+            font-family: 'Archivo', sans-serif;
+            color: var(--color-accent);
+            line-height: 1.6;
+            background: var(--bg-page);
+        }
+
+        /* Header */
+        header {
+            background: rgba(5, 8, 20, 0.95);
+            padding: 1.1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            transition: box-shadow 0.3s ease;
+        }
+
+        header.scrolled {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        }
+
+        .logo {
+            color: var(--color-accent);
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        nav {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: var(--color-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: var(--color-primary);
+        }
+
+        /* Contenedor principal del programa */
+        .program-wrapper {
+            padding: 7rem 1.5rem 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .program-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .program-title {
+            font-size: 2.3rem;
+            color: var(--color-accent);
+            margin-bottom: 0.6rem;
+            letter-spacing: 0.12em;
+           
+        }
+
+        .program-subtitle {
+            color: var(--color-secondary);
+            font-size: 0.95rem;
+        }
+
+        .program-badge {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.35rem 1rem;
+            border: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            color: var(--color-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            background: var(--bg-soft);
+        }
+
+        .program-timezone {
+            margin-top: 0.8rem;
+            font-size: 0.85rem;
+            color: var(--color-secondary);
+        }
+
+        /* Tabs de días */
+        .tabs-bar {
+            margin-top: 2.2rem;
+            border-bottom: 0px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        .program-tabs {
+            display: flex;
+            gap: 0.4rem;
+            padding-bottom: 0.2rem;
+            min-width: max-content;
+        }
+
+        .tab-button {
+            padding: 0.9rem 1.6rem;
+            border: 0px solid var(--border-color);
+            color: var(--color-secondary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            cursor: pointer;
+            outline: none;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .tab-button:hover {
+            color: var(--color-accent);
+            border-color: var(--color-primary);
+        }
+
+        .tab-button.active {
+            background: var(--bg-card);
+            color: var(--color-accent);
+            border-bottom: 1px solid var(--bg-card);
+        }
+
+        /* Contenido de pestañas */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Lista de sesiones */
+        .sessions-list {
+            margin-top: 1.6rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .session-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            display: grid;
+            grid-template-columns: 220px minmax(0, 1fr);
+            overflow: hidden;
+        }
+
+        .session-meta {
+            background: var(--bg-soft);
+            border-right: 1px solid var(--border-color);
+            padding: 1rem 1.1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            position: relative;
+        }
+
+        .session-meta::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--color-primary);
+        }
+
+        .session-date {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--color-secondary);
+        }
+
+        .session-time {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--color-accent);
+        }
+
+        .session-location {
+            margin-top: 0.4rem;
+            font-size: 0.85rem;
+            color: var(--color-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .session-mode {
+            margin-top: 0.25rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .session-type-pill {
+            margin-top: 0.7rem;
+            display: inline-block;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.7rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--color-accent);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+        }
+
+        .session-info {
+            padding: 1rem 1.3rem 1.1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .session-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--color-accent);
+        }
+
+        .session-speaker {
+            font-size: 0.9rem;
+            color: var(--color-secondary);
+        }
+
+        .session-description {
+            font-size: 0.9rem;
+            color: var(--color-secondary);
+        }
+
+        .session-tags {
+            margin-top: 0.4rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        .session-tag {
+            font-size: 0.78rem;
+            padding: 0.25rem 0.75rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-soft);
+            color: var(--color-accent);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .session-tag.main {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: #000814;
+        }
+
+        .program-note {
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: var(--color-secondary);
+            text-align: center;
+        }
+
+        footer {
+            margin-top: 2.5rem;
+            padding: 1.3rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--color-secondary);
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-soft);
+        }
+
+        footer a {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+            }
+
+            .program-title {
+                font-size: 1.7rem;
+            }
+
+            .session-card {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .session-meta {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="mainHeader">
+        <div class="logo">VI CONGRESO INTERNACIONAL</div>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="#programa">Programa</a>
+        </nav>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="program-wrapper" id="programa">
+        <section class="program-header">
+            <h1 class="program-title">Programa del Congreso</h1>
+            <p class="program-subtitle">
+                Ciudad Real Madrid · 6, 7 y 8 de marzo · VI Congreso Internacional
+            </p>
+            
+            <p class="program-timezone">Todas las sesiones se muestran en hora local (CET).</p>
+        </section>
+
+        <!-- Tabs de días -->
+        <div class="tabs-bar">
+            <section class="program-tabs">
+                <button class="tab-button active" data-target="#dia1">Día 1 · 6 Mar</button>
+                <button class="tab-button" data-target="#dia2">Día 2 · 7 Mar</button>
+                <button class="tab-button" data-target="#dia3">Día 3 · 8 Mar</button>
+            </section>
+        </div>
+
+        <!-- Día 1 -->
+        <section class="tab-content active" id="dia1">
+            <div class="sessions-list">
+                <article class="session-card">
+                    <div class="session-meta">
+                        <div class="session-date">Día 1 · 6 Mar</div>
+                        <div class="session-time">09:00 – 09:30</div>
+                        <div class="session-location">📍 Hall Principal</div>
+                        <!--<div class="session-mode">Presencial</div>-->
+                        <span class="session-type-pill">Acreditación</span>
+                    </div>
+                    <div class="session-info">
+                        <h3 class="session-title">Recepción de participantes y apertura institucional</h3>
+                        <p class="session-speaker"><strong>Ponentes:</strong> Equipo de organización y representantes institucionales.</p>
+                        <p class="session-description">
+                            Bienvenida oficial al congreso, entrega de acreditaciones y presentación del marco general del evento.
+                        </p>
+                        <div class="session-tags">
+                            <span class="session-tag main">Acto institucional</span>
+                            <span class="session-tag">Networking</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="session-card">
+                    <div class="session-meta">
+                        <div class="session-date">Día 1 · 6 Mar</div>
+                        <div class="session-time">09:30 – 10:15</div>
+                        <div class="session-location">📍 Auditorio Principal</div>
+                        <!--<div class="session-mode">Presencial</div>-->
+                        <span class="session-type-pill">Conferencia inaugural</span>
+                    </div>
+                    <div class="session-info">
+                        <h3 class="session-title">El deporte como motor de transformación social</h3>
+                        <p class="session-speaker"><strong>Ponente:</strong> Experto/a internacional en deporte y educación en valores.</p>
+                        <p class="session-description">
+                            Reflexión inspiradora sobre el potencial del deporte para generar cambio social, inclusión y oportunidades educativas.
+                        </p>
+                        <div class="session-tags">
+                            <span class="session-tag main">Conferencia</span>
+                            <span class="session-tag">Valores</span>
+                            <span class="session-tag">Educación</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="session-card">
+                    <div class="session-meta">
+                        <div class="session-date">Día 1 · 6 Mar</div>
+                        <div class="session-time">10:30 – 12:00</div>
+                        <div class="session-location">📍 Sala 1</div>
+                        <!--<div class="session-mode">Presencial</div>-->
+                        <span class="session-type-pill">Mesa redonda</span>
+                    </div>
+                    <div class="session-info">
+                        <h3 class="session-title">Innovación en programas deportivos educativos</h3>
+                        <p class="session-speaker"><strong>Ponentes:</strong> Representantes de clubes, escuelas y fundaciones.</p>
+                        <p class="session-description">
+                            Intercambio de experiencias sobre proyectos que integran tecnología, metodologías activas y deporte con impacto medible.
+                        </p>
+                        <div class="session-tags">
+                            <span class="session-tag main">Innovación</span>
+                            <span class="session-tag">Buenas prácticas</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Día 2 -->
+        <section class="tab-content" id="dia2">
+            <div class="sessions-list">
+                <article class="session-card">
+                    <div class="session-meta">
+                        <div class="session-date">Día 2 · 7 Mar</div>
+                        <div class="session-time">09:00 – 10:00</div>
+                        <div class="session-location">📍 Auditorio Principal</div>
+                        <!--<div class="session-mode">Presencial</div>-->
+                        <span class="session-type-pill">Panel de experiencias</span>
+                    </div>
+                    <div class="session-info">
+                        <h3 class="session-title">Clubes, escuelas y fundaciones: proyectos con impacto real</h3>
+                        <p class="session-speaker"><strong>Ponentes:</strong> Responsables de proyectos de referencia nacional e internacional.</p>
+                        <p class="session-description">
+                            Presentación y análisis de iniciativas que están transformando comunidades a través del deporte y la educación.
+                        </p>
+                        <div class="session-tags">
+                            <span class="session-tag main">Impacto</span>
+                            <span class="session-tag">Comunidades</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="session-card">
+                    <div class="session-meta">
+                        <div class="session-date">Día 2 · 7 Mar</div>
+                        <div class="session-time">10:15 – 11:30</div>
+                        <div class="session-location">📍 Sala 1</div>
+                        <!--<div class="session-mode">Presencial</div>-->
+                        <span class="session-type-pill">Taller</span>
+                    </div>
+                    <div class="session-info">
+                        <h3 class="session-title">Evaluación de programas y medición de valores</h3>
+                        <p class="session-speaker"><strong>Ponente:</strong> Especialista en evaluación de proyectos educativos y deportivos.</p>
+                        <p class="session-description">
+                            Herramientas, indicadores y ejemplos prácticos para valorar el desarrollo de competencias y valores en los participantes.
+                        </p>
+                        <div class="session-tags">
+                            <span class="session-tag main">Evaluación</span>
+                            <span class="session-tag">Datos</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Día 3 -->
+        <section class="tab-content" id="dia3">
+            <div class="sessions-list">
+                <article class="session-card">
+                    <div class="session-meta">
+                        <div class="session-date">Día 3 · 8 Mar</div>
+                        <div class="session-time">09:00 – 10:30</div>
+                        <div class="session-location">📍 Sala 1</div>
+                        <!--<div class="session-mode">Presencial</div>-->
+                        <span class="session-type-pill">Laboratorio de casos</span>
+                    </div>
+                    <div class="session-info">
+                        <h3 class="session-title">Análisis de casos reales en contextos deportivos</h3>
+                        <p class="session-speaker"><strong>Ponente:</strong> Equipo de formadores/as especialistas en acompañamiento a entrenadores.</p>
+                        <p class="session-description">
+                            Trabajo sobre situaciones reales, toma de decisiones, gestión de conflictos y aprendizaje compartido entre participantes.
+                        </p>
+                        <div class="session-tags">
+                            <span class="session-tag main">Casos reales</span>
+                            <span class="session-tag">Gestión</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="session-card">
+                    <div class="session-meta">
+                        <div class="session-date">Día 3 · 8 Mar</div>
+                        <div class="session-time">11:00 – 12:30</div>
+                        <div class="session-location">📍 Campos exteriores</div>
+                        <div class="session-mode">Práctica en campo</div>
+                        <span class="session-type-pill">Práctica aplicada</span>
+                    </div>
+                    <div class="session-info">
+                        <h3 class="session-title">Dinámicas de equipo y liderazgo en el campo</h3>
+                        <p class="session-speaker"><strong>Ponente:</strong> Staff técnico y responsables de metodología.</p>
+                        <p class="session-description">
+                            Dinámicas prácticas orientadas a trabajar liderazgo, cohesión de equipo y comunicación en situaciones reales de juego.
+                        </p>
+                        <div class="session-tags">
+                            <span class="session-tag main">Liderazgo</span>
+                            <span class="session-tag">Equipo</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <p class="program-note">
+            Los horarios, salas, ponentes y contenidos pueden sufrir modificaciones. La versión definitiva se comunicará a los participantes con antelación.
+        </p>
+    </main>
+
+    <footer>
+        &copy; 2025 VI Congreso Internacional. Todos los derechos reservados.
+        · Diseñado con enfoque en deporte, educación y valores.
+    </footer>
+
+    <script>
+        // Tabs de día
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetSelector = button.getAttribute('data-target');
+                const target = document.querySelector(targetSelector);
+
+                tabButtons.forEach(b => b.classList.remove('active'));
+                button.classList.add('active');
+
+                tabContents.forEach(content => content.classList.remove('active'));
+                if (target) target.classList.add('active');
+            });
+        });
+
+        // Sombra en header al hacer scroll
+        const header = document.getElementById('mainHeader');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>
